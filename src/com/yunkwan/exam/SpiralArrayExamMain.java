@@ -78,7 +78,7 @@ public class SpiralArrayExamMain {
 		static final int DOWN = 1;
 		static final int LEFT = 2;
 		static final int UP = 3;
-		int[][] DIRECTION = {{0,1}, {1,0}, {0,-1}, {-1,0}};
+		int[][] DIRECTIONS = {{0,1}, {1,0}, {0,-1}, {-1,0}};
 		
 		public void visit(Map map) {
 			map.footPrint(current, stepsCounter++);
@@ -104,64 +104,20 @@ public class SpiralArrayExamMain {
 			if(blockedCounter++ >= 4) {
 				return false;
 			}
-			switch(direction) {
-			case RIGHT:
-				direction = DOWN;
-				break;
-			case LEFT:
-				direction = UP;
-				break;
-			case UP:
-				direction = RIGHT;
-				break;
-			case DOWN:
-				direction = LEFT;
-				break;
-			}
+			direction = (direction + 1) % 4;
 			return true;
 		}
 
-		public boolean checkNext(Map map) {
-			switch(direction) {
-			case RIGHT:
-				if(map.check(current.x, current.y+1)) {
-					return true;
-				}
-				break;
-			case LEFT:
-				if(map.check(current.x, current.y-1)) {
-					return true;
-				}
-				break;
-			case UP:
-				if(map.check(current.x-1, current.y)) {
-					return true;
-				}
-				break;
-			case DOWN:
-				if(map.check(current.x+1, current.y)) {
-					return true;
-				}
-				break;
+		private boolean checkNext(Map map) {
+			if(map.check(current.x + DIRECTIONS[direction][0], current.y + DIRECTIONS[direction][1])) {
+				return true;
 			}
 			return false;
 		}
-		
-		public void goSingleStep() {
-			switch(direction) {
-			case RIGHT:
-				current.y++;
-				break;
-			case LEFT:
-				current.y--;
-				break;
-			case UP:
-				current.x--;
-				break;
-			case DOWN:
-				current.x++;
-				break;
-			}
+
+		private void goSingleStep() {
+			current.x += DIRECTIONS[direction][0];
+			current.y += DIRECTIONS[direction][1];
 		}
 	}
 
