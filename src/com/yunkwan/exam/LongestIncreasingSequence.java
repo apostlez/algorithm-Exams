@@ -29,8 +29,7 @@ public class LongestIncreasingSequence {
 	    } catch (IOException e) {
 	        System.err.println(e);
 	    }
-
-}
+	}
 	
 	private int[] parseArrayToInt(String[] str, int length) {
 		int [] sequence = new int[length];
