@@ -3,6 +3,8 @@ package com.yunkwan.exam;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class CLOCKSYNC {
@@ -33,6 +35,8 @@ switches connected clocks:
 			{3, 4, 5, 9, 13}
 	};
 	
+	static ArrayList<Integer> history = new ArrayList<Integer>(); 
+
 	public static void main (String args[]) throws FileNotFoundException {
 		start();
 	}
@@ -45,29 +49,150 @@ switches connected clocks:
 			for(int i = 0; i < 16; i++) {
 				clocks[i] = sc.nextInt();
 			}
-			System.out.println(calculate(clocks));
+			System.out.println(new Date());
+			System.out.println(calculate(clocks) + " " + cases);
+			System.out.println(new Date());
+			printHistory();
+			cases = 0;
+			history.clear();
+			level = 0;
 		}
 	}
 
+	static int cases = 0;
+	/*
+Tue Jun 16 01:36:06 KST 2015
+find!
+2 31019795
+Tue Jun 16 01:36:23 KST 2015
+8  8  
+Tue Jun 16 01:36:23 KST 2015
+find!
+9 43383132
+Tue Jun 16 01:36:48 KST 2015
+6  6  6  1  7  5  5  3  0  
+	 */
 	private static int calculate(int[] clocks) {
-		int eval = 0, eval_priv = 0;
+		cases++;
+		int eval = 0;
 		int ret = 0;
-		eval_priv = checksum(clocks);
-		if(eval_priv == 192) {
+		eval = checksum(clocks);
+		if(eval == 192) {
+			//System.out.println("find!");
+			return 0;
+		}
+		int i = 0;
+		for(i = 0; clocks[i] == 12; i++);
+		for(int j = 0; j < 10; j++) {
+			for(int k = 0; k < switches[j].length; k++) {
+				if(switches[j][k] == i) {
+					int count = 0;
+					for(int l=0;l<history.size();l++) {
+						if(history.get(l) == j) {
+							count++;
+						}
+					}
+					if(count < 3) {
+						history.add(0, j);
+						ret = calculate(pushSwitch(j, clocks));
+						if( ret >= 0) {
+							return ++ret;
+						}
+					}
+				}
+			}
+		}
+		history.remove(0);
+		return -1;
+	}
+
+	/*
+Tue Jun 16 01:26:39 KST 2015
+find!
+2
+8  8  
+Tue Jun 16 01:26:56 KST 2015
+Tue Jun 16 01:26:56 KST 2015
+find!
+9
+6  6  6  1  7  5  5  3  0  
+Tue Jun 16 01:27:20 KST 2015
+	 */
+	private static int calculate_brforeOpt(int[] clocks) {
+		ArrayList<Integer> localHistory = new ArrayList<Integer>();
+		int eval = 0;
+		int ret = 0;
+		eval = checksum(clocks);
+		if(eval == 192) {
 			System.out.println("find!");
 			return 0;
 		}
-		for(int i = 0; i < 10; i++) {
-			eval = checksumNext(i, clocks);
-			if(eval >= eval_priv) {
-				print(i, clocks);
-				eval_priv = eval;
-				ret = calculate(pushSwitch(i, clocks));
+		// 1. find not "12"
+		int i = 0;
+		for(i = 0; clocks[i] == 12; i++);
+		for(int j = 0; j < 10; j++) {
+			for(int k = 0; k < switches[j].length; k++) {
+				if(switches[j][k] == i) {
+					localHistory.add(j);
+				}
+			}
+		}
+		for(int j = 0; j < localHistory.size(); j++) {
+			int count = 0;
+			for(int k=0;k<history.size();k++) {
+				if(history.get(k) == localHistory.get(j)) {
+					count++;
+				}
+			}
+			if(count < 3) {
+				history.add(0, localHistory.get(j));
+				ret = calculate(pushSwitch(localHistory.get(j), clocks));
 				if( ret >= 0) {
 					return ++ret;
 				}
 			}
 		}
+		history.remove(0);
+		return -1;
+	}
+	
+	static int level = 0;
+	private static int calculate_old(int[] clocks) {
+		int eval = 0, eval_priv = 0;
+		int ret = 0;
+		eval_priv = checksum(clocks);
+		if(eval_priv == 192) {
+			System.out.println("find!");
+			level--;
+			return 0;
+		}
+		for(int i = 0; i < 10; i++) {
+			//eval = checksumNext(i, clocks);
+			int count = 0;
+			for(int j=0;j<(history.size() > 4 ? 4 : history.size());j++) {
+				if(history.get(j) == i) {
+					count++;
+				}
+			}
+			if(count > 3) {
+				level--;
+				return -1;
+			}
+			history.add(0,i);
+			//if(eval >= eval_priv)
+			{
+				print(i, clocks);
+				level++;
+				eval_priv = eval;
+				ret = calculate(pushSwitch(i, clocks));
+				if( ret >= 0) {
+					level--;
+					return ++ret;
+				}
+			}
+			history.remove(0);
+		}
+		level--;
 		return -1;
 	}
 	
@@ -106,10 +231,20 @@ switches connected clocks:
 	}
 	
 	private static void print(int sw, int [] clocks) {
-		for(int i = 0; i < 16; i++) {
+/*		for(int i = level; i >= 0; i--) {
+			System.out.print("\t");
+		}
+*/		for(int i = 0; i < 16; i++) {
 			System.out.print(clocks[i] + "\t");
 		}
-		System.out.println(" " + sw);
+		System.out.println("=" + checksum(clocks) + ","+ sw);
+	}
+	
+	private static void printHistory() {
+		for(int i = 0; i < history.size(); i++) {
+			System.out.print(history.get(i) + "  ");
+		}
+		System.out.println();
 	}
 
 }
