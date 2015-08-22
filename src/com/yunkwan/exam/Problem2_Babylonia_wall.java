@@ -29,6 +29,8 @@ public class Problem2_Babylonia_wall {
             for (int i = 0; i < N*2; i++) {
             	wall.add(sc.nextInt());
             }
+            maxRight = 0;minLeft = 2000000000;
+            getOutline(wall); // for fixed left and right
             System.out.println(calculate(N, K, W, wall) ? "YES":"NO");
         }
     }
@@ -41,7 +43,7 @@ public class Problem2_Babylonia_wall {
     
     public static void getOutline(ArrayList<Integer> wall) {
     	int size = wall.size();
-    	maxTop = 0;maxRight = 0;minBot = 2000000000;minLeft = 2000000000;
+    	maxTop = 0;minBot = 2000000000;
     	for(int i = 0; i < size-1; i = i + 2) {
         	int x = wall.get(i);
         	int y = wall.get(i+1);
