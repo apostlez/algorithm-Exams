@@ -20,6 +20,7 @@ public class Problem2_Babylonia_wall {
     
     public static void main(String args[]) throws FileNotFoundException {
         Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("Problem2.txt")));
+    	//Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("problem2.in")));
         int tc = sc.nextInt();
         while (tc-- > 0) {
             int N = sc.nextInt();
@@ -54,62 +55,45 @@ public class Problem2_Babylonia_wall {
     	}
     }
     
-    public static int getMaxTopIndex(ArrayList<Integer> wall) {
-    	int size = wall.size();
-    	int max_val = -2000000000, max_index = -1;
-    	for(int i = 1; i < size; i = i + 2) {
-    		if(max_val < wall.get(i)) {
-    			max_index = i-1;
-    			max_val = wall.get(i);
-    		}
-    	}
-    	return max_index;
-    }
-    
-    public static int getMinBotIndex(ArrayList<Integer> wall) {
-    	int size = wall.size();
-    	int min_val = 2000000000, min_index = -1;
-    	for(int i = 1; i < size; i = i + 2) {
-    		if(min_val > wall.get(i)) {
-    			min_index = i-1;
-    			min_val = wall.get(i);
-    		}
-    	}
-    	return min_index;
+    public static boolean remove(int index, int N, int K, int W, ArrayList<Integer> wall) {
+		int a = wall.remove(index);
+		int b = wall.remove(index);
+		boolean ret = false;
+		ret = calculate(N, K, W, wall);
+		wall.add(index, b);
+		wall.add(index, a);
+		return ret;
     }
 
-    
     public static boolean calculate(int N, int K, int W, ArrayList<Integer> wall) {
-    	boolean ret = false;
     	// if k=0, check wall is correct ? true
-    	if(K == 0) {
-    		getOutline(wall);
-        	for(int i = 0; i < N*2-1; i = i + 2) {
-            	int x = wall.get(i);
-            	int y = wall.get(i+1);
-            	// check inner box
-            	if((maxRight-W > x && minLeft+W < x ) && (maxTop-W > y && minBot + W < y )) {
-            		return false;
-            	}else // check outer box
-            		if( (maxRight < x || maxTop < y  || minLeft > x || minBot > y)) {
-        			return false;
-        		}
-        	}
-        	return true;
-    	} else {
-        	// remove maxTop from wall, calculate(N, K-1, W, wall') is correct ? true
-    		ArrayList<Integer> wall_ = (ArrayList<Integer>) wall.clone();
-    		int index = getMaxTopIndex(wall_);
-    		wall_.remove(index);wall_.remove(index);
-    		ret = calculate(N-1, K-1, W, wall_);
-    		if(ret) return true;
-        	// else, remove minBot from wall, calculate(N, K-1, W, wall'') is correct ? true
-    		ArrayList<Integer> wall__ = (ArrayList<Integer>) wall.clone();
-    		index = getMinBotIndex(wall__);
-    		wall__.remove(index);wall__.remove(index);
-    		ret = calculate(N-1, K-1, W, wall__);
-    		if(ret) return true;
-    	}
-        return false;
+   		getOutline(wall);
+       	for(int i = 0; i < N*2-1; i = i + 2) {
+           	int x = wall.get(i);
+           	int y = wall.get(i+1);
+           	// check inner box
+           	if((maxRight-W > x && minLeft+W < x ) && (maxTop-W > y && minBot + W < y )) {
+           		if(K>0) {
+           			return remove(i, N-1, K-1, W, wall);
+           		}
+           		//print(x,y,W,false);
+           		return false;
+           	}
+           	// check outer box
+           	if( (maxRight < x || maxTop < y  || minLeft > x || minBot > y)) {
+            	if(K>0) {
+            		return remove(i, N-1, K-1, W, wall);
+            	}
+            	//print(x,y,W,false);
+            	return false;
+       		}
+       	}
+       	return true;
     }
+
+    public static void print (int x, int y, int W, boolean t) {
+    	System.out.println(minLeft + "<" + x + "<" + maxRight + " and " + minBot + "<" + y + "<"  + maxTop + " margin:" + W + " " + t);
+    	
+    }
+
 }
