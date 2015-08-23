@@ -8,6 +8,14 @@ import java.util.Scanner;
 // 114
 // 1596
 
+/*
+036
+822
+488
+223
+077
+*/
+
 /* dist
  * x 0 1 2 3 4 5 6 7 8 9
  * 0 0 3 3 3 2 2 2 1 1 1 
@@ -46,7 +54,7 @@ public class Problem1_phonenumber {
     public static int[] DIRECTION = {0,0};
     
     public static void main(String args[]) throws FileNotFoundException {
-        Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("Problem1.txt")));
+        Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("problem1.in")));
         int tc = sc.nextInt();
         while (tc-- > 0) {
             int length = sc.nextInt();
@@ -71,30 +79,47 @@ public class Problem1_phonenumber {
         int ret = 0;
         int prev_distance = 100;
         int[] prev_dir = {0,0};
+        int dist = 0;
         
-        for(int i=1;i<str.length;i++) {
+        if(str[0] != str[1]) { // a1
+        	dist = getDistance(str[0]-'0', str[1]-'0');
+        	if(dist <= 2) { // a2
+        		ret += 1;
+        	} else {
+        		ret += 2; // a3
+        	}
+    		prev_distance = dist;
+            prev_dir[0] = DIRECTION[0]; 
+            prev_dir[1] = DIRECTION[1];
+        }
+        for(int i=2;i<str.length;i++) {
             if(str[i-1] != str[i]) {
-                int dist = getDistance(str[i-1]-'0', str[i]-'0');
-                if(dist <= 2) { // b2 or b3 or a2
+                dist = getDistance(str[i-1]-'0', str[i]-'0');
+                if(dist <= 2) { // b2 or b3
                     if(prev_distance <= 2) {
-                        if((DIRECTION[0]-prev_dir[0] + DIRECTION[1]-prev_dir[1]) == 0) {
+                        if((DIRECTION[0] == prev_dir[0] && DIRECTION[1] == prev_dir[1])) {
                             ret += 1; // b2
+                            //System.out.println(str[i-1] + ">" + str[i] + ":1: dist <1,predist<1,same dir");
                         } else {
                             ret += 2; // b3
+                            //System.out.println(str[i-1] + ">" + str[i] + ":2: dist <1,predist<1,diff dir");
                         }
                     } else {
-                        if(prev_distance == 100) ret--; // a2
                         ret += 2; // b3
+                        //System.out.println(str[i-1] + ">" + str[i] + ":2: dist <1");
                     }
-                } else { // b4 or a3
-                    if(prev_distance == 100) ret--; // a3
-                    ret += 3; // b4
+                } else { // b4
+                    ret += 3;
+                    //System.out.println(str[i-1] + ">" + str[i] + ": 3");
                 }
                 prev_distance = dist;
-                prev_dir = DIRECTION;
+                prev_dir[0] = DIRECTION[0]; 
+                prev_dir[1] = DIRECTION[1];
             } else { // b1, a1
-                // prev == next
+            	//System.out.println(str[i-1] + ">" + str[i] + ": 0");
                 prev_distance = 0;
+                prev_dir[0] = 0; 
+                prev_dir[1] = 0;
             }
         }
         return ret;
@@ -110,5 +135,17 @@ public class Problem1_phonenumber {
             //System.out.println(str[i] + "\t:\t" + ret);
         }
         return min_number;
+    }
+    
+    public static void test() {
+    	String strTest = "1234567890";
+    	char[] t = strTest.toCharArray();
+    	int dist = 0;
+    	for(int i=1;i<t.length;i++) {
+    		for(int j=1;j<t.length;j++) {
+    			dist = getDistance(t[i-1]-'0', t[j]-'0');
+    			System.out.println(t[i-1] + "->" + t[j] + ":"+ dist + "," + DIRECTION[0] + DIRECTION[1]);
+    		}
+    	}
     }
 }
