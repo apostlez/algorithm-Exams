@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 // YES
@@ -19,8 +20,8 @@ import java.util.Scanner;
 public class Problem2_Babylonia_wall {
     
     public static void main(String args[]) throws FileNotFoundException {
-        Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("Problem2.txt")));
-    	//Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("problem2.in")));
+        //Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("Problem2.txt")));
+    	Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("problem2.in")));
         int tc = sc.nextInt();
         while (tc-- > 0) {
             int N = sc.nextInt();
@@ -30,29 +31,37 @@ public class Problem2_Babylonia_wall {
             for (int i = 0; i < N*2; i++) {
             	wall.add(sc.nextInt());
             }
-            maxRight = -2000000000;minLeft = 2000000000;
-            getOutline(wall); // for fixed left and right
+            horizontal = getHorizontalOutline(wall); // for fixed left and right
             System.out.println(calculate(N, K, W, wall) ? "YES":"NO");
         }
     }
     
-    
-    public static int minBot = 0;
-    public static int minLeft = 0;
-    public static int maxTop = 0;
-    public static int maxRight = 0;
-    
-    public static void getOutline(ArrayList<Integer> wall) {
+    public static int[] getHorizontalOutline(ArrayList<Integer> wall) {
     	int size = wall.size();
-    	maxTop = -2000000000;minBot = 2000000000;
+    	int[] ret = {2000000000, -1, -2000000000, -1};
     	for(int i = 0; i < size-1; i = i + 2) {
         	int x = wall.get(i);
-        	int y = wall.get(i+1);
-    		if(maxRight < x) maxRight = x;
-    		if(minLeft > x) minLeft = x;
-    		if(maxTop < y) maxTop = y;
-    		if(minBot > y) minBot = y;
+    		if(ret[MAX] < x) { ret[MAX] = x; ret[MAX_INDEX] = i; }
+    		if(ret[MIN] > x) { ret[MIN] = x; ret[MIN_INDEX] = i; }
     	}
+    	return ret;
+    }
+    
+    public static final int MAX = 2;
+    public static final int MAX_INDEX = 3;
+    public static final int MIN = 0;
+    public static final int MIN_INDEX = 1;
+    static int[] horizontal = {};
+    
+    public static int[] getVerticalOutline(ArrayList<Integer> wall) {
+    	int size = wall.size();
+    	int[] ret = {2000000000, -1, -2000000000, -1}; 
+    	for(int i = 0; i < size-1; i = i + 2) {
+        	int y = wall.get(i+1);
+    		if(ret[MAX] < y) { ret[MAX] = y; ret[MAX_INDEX] = i; }
+    		if(ret[MIN] > y) { ret[MIN] = y; ret[MIN_INDEX] = i; }
+    	}
+    	return ret;
     }
     
     public static boolean remove(int index, int N, int K, int W, ArrayList<Integer> wall) {
@@ -67,33 +76,25 @@ public class Problem2_Babylonia_wall {
 
     public static boolean calculate(int N, int K, int W, ArrayList<Integer> wall) {
     	// if k=0, check wall is correct ? true
-   		getOutline(wall);
+    	int[] vertical = getVerticalOutline(wall);
        	for(int i = 0; i < N*2-1; i = i + 2) {
            	int x = wall.get(i);
            	int y = wall.get(i+1);
-           	// check inner box
-           	if((maxRight-W > x && minLeft+W < x ) && (maxTop-W > y && minBot + W < y )) {
+           	if((horizontal[MIN]+W < x && x < horizontal[MAX]-W) && (vertical[MIN]+W < y && y < vertical[MAX]-W)) {
+           		// MAX or MIN is outbound
            		if(K>0) {
-           			return remove(i, N-1, K-1, W, wall);
+               		if(vertical[MAX]-y < y-vertical[MIN] ) {
+               			return remove(vertical[MAX_INDEX], N-1, K-1, W, wall);
+               		} else {
+               			return remove(vertical[MIN_INDEX], N-1, K-1, W, wall);
+               		}
            		}
-           		//print(x,y,W,false);
            		return false;
            	}
-           	// check outer box
-           	if( (maxRight < x || maxTop < y  || minLeft > x || minBot > y)) {
-            	if(K>0) {
-            		return remove(i, N-1, K-1, W, wall);
-            	}
-            	//print(x,y,W,false);
-            	return false;
-       		}
        	}
-       	return true;
+/*       	for(int i = 0; i < N*2-1; i = i + 2) {
+       		System.out.println(wall.get(i) + "\t" + wall.get(i+1));
+       	}
+*/       	return true;
     }
-
-    public static void print (int x, int y, int W, boolean t) {
-    	System.out.println(minLeft + "<" + x + "<" + maxRight + " and " + minBot + "<" + y + "<"  + maxTop + " margin:" + W + " " + t);
-    	
-    }
-
 }
