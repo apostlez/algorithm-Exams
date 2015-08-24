@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Problem3_reorder {
 
     public static void main(String args[]) throws FileNotFoundException {
-        Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("Problem3.txt")));
+        Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream("problem3.in")));
         int tc = sc.nextInt();
         while (tc-- > 0) {
             n = sc.nextInt();
@@ -38,28 +38,19 @@ public class Problem3_reorder {
     		int a = pairs.get(i*2), b = pairs.get(i*2+1);
     		int tmpA = -1;
     		for(int j=0;j<newline.length;j++) {
-    			// find a
-    			if(newline[j] == a) {
+    			// find a or b
+    			if(newline[j] == a || newline[j] == b) {
         			// get dist
     				if(tmpA != -1) {
-    					sum += Math.abs(tmpA - j);
-    					break;
-    				}
-    				tmpA = j;
-    			}
-    			// find b
-    			if(newline[j] == b) {
-        			// get dist
-    				if(tmpA != -1) {
-    					sum += Math.abs(tmpA - j);
+    					sum += tmpA > j ? tmpA - j: j - tmpA;
     					break;
     				}
     				tmpA = j;
     			}
     		}
     	}
-//    	print(newline);
-//    	System.out.println(sum);
+    	//print(newline);
+    	//System.out.println(sum);
     	return sum;    	
     }
     
