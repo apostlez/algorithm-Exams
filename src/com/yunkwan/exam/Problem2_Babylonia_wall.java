@@ -83,11 +83,7 @@ public class Problem2_Babylonia_wall {
            	if((horizontal[MIN]+W < x && x < horizontal[MAX]-W) && (vertical[MIN]+W < y && y < vertical[MAX]-W)) {
            		// MAX or MIN is outbound
            		if(K>0) {
-               		if(vertical[MAX]-y < y-vertical[MIN] ) {
-               			return remove(vertical[MAX_INDEX], N-1, K-1, W, wall);
-               		} else {
-               			return remove(vertical[MIN_INDEX], N-1, K-1, W, wall);
-               		}
+           			return remove(vertical[MAX_INDEX], N-1, K-1, W, wall) || remove(vertical[MIN_INDEX], N-1, K-1, W, wall);
            		}
            		return false;
            	}
