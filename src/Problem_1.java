@@ -1,21 +1,25 @@
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.Scanner;
 
 public class Problem_1 {
 
+    static BufferedWriter out;
 	public static void main(String[] args) {
 		try {
+            out = new BufferedWriter(new FileWriter(args[0].substring(0, args[0].lastIndexOf('.')) + ".out"));
 			start(args[0]);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+			out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 	
 	static int father[];
 	
-	static void start(String filename) throws FileNotFoundException {
+	static void start(String filename) throws Exception {
 		Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream(filename)));
 		int tc = sc.nextInt();
 		while(tc-- > 0) {
@@ -26,7 +30,10 @@ public class Problem_1 {
 				int s = sc.nextInt();
 				father[s] = p;
 			}
-			System.out.println(calculate(relation));
+			int result = calculate(relation);
+			System.out.println(result);
+			out.write(String.valueOf(result));
+			out.newLine();
 		}
 	}
 	

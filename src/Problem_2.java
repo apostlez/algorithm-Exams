@@ -1,22 +1,28 @@
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Problem_2 {
 
+    static BufferedWriter out;
+    
 	public static void main(String[] args) {
 		try {
-			start(args[0]);
+		    out = new BufferedWriter(new FileWriter(args[0].substring(0, args[0].lastIndexOf('.')) + ".out"));
+		    start(args[0]);
+		    out.close();
 			//start("problem_2_Set2.in");
-		} catch (FileNotFoundException e) {
+        } catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	static int a[], b[];
 	
-	static void start(String filename) throws FileNotFoundException {
+	static void start(String filename) throws IOException {
 		Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream(filename)));
 		int tc = sc.nextInt();
 		while(tc-- > 0) {
@@ -29,7 +35,10 @@ public class Problem_2 {
 			for(int i = 0; i < n; i++) {
 				b[i] = sc.nextInt();
 			}
-			System.out.println(compareF(a, b, n) | compareB(a, b, n));
+			int result = compareF(a, b, n) | compareB(a, b, n);
+			System.out.println(result);
+			out.write(String.valueOf(result));
+			out.newLine();
 		}
 	}
 	
