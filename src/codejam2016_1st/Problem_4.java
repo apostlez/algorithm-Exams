@@ -1,3 +1,4 @@
+package codejam2016_1st;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

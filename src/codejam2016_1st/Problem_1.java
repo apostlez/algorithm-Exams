@@ -1,4 +1,4 @@
-
+package codejam2016_1st;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
