@@ -18,42 +18,23 @@ public class Problem_1 {
         }
 	}
 	
-	static int father[];
-	
 	static void start(String filename) throws Exception {
 		Scanner sc = new Scanner(new BufferedInputStream(new FileInputStream(filename)));
 		int tc = sc.nextInt();
 		while(tc-- > 0) {
-			father = new int[50001];
-			int relation = sc.nextInt();
-			for(int i = 0; i < relation-1; i++) {
-				int p = sc.nextInt();
-				int s = sc.nextInt();
-				father[s] = p;
-			}
-			int result = calculate(relation);
+			double rx = sc.nextInt();
+			double ry = sc.nextInt();
+			double en = sc.nextInt();
+			int result = calculate(rx, ry, en);
 			System.out.println(result);
 			out.write(String.valueOf(result));
 			out.newLine();
 		}
 	}
 	
-	static int calculate(int relation) {
-		int res = 1, old = res;
-		for(int i=0;i<relation;i++) {
-			old = getDepth(i+1,1);
-			res = res > old ? res : old;			
-		}
-		return res;
+	static int calculate(double rx, double ry, double en) {
+		double dgreeA = Math.toDegrees(Math.atan(ry/rx) * 2);
+		double dgreeB = Math.toDegrees(Math.atan(ry/(en-rx)) * 2);
+		return (int) ((int) (Math.ceil(2 * Math.PI * ry * (dgreeA+dgreeB) / 360)) + en);
 	}
-	
-	static int getRoot(int son) {
-		System.out.println(son);
-		return father[son] == 0 ? son : getRoot(father[son]); 
-	}
-	
-	static int getDepth(int son, int d) {
-		return father[son] == 0 ? d : getDepth(father[son], d+1); 
-	}
-
 }
