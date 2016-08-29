@@ -77,7 +77,7 @@ public class Problem_5 {
     	if(remained == 0) return true;
 
     	int start = 0;
-    	// ÇÑ±ºµ¥¸¸ °¥¼ö ÀÖ´Â ³à¼®µéÀº ´Ù Ã¤¿ö³õ°í ½ÃÀÛÇÏÀÚ.
+    	// ï¿½Ñ±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½à¼®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
     	for(int i=0;i<N;i++) {
         	int num = 0;
         	int s = 0;
@@ -120,10 +120,7 @@ public class Problem_5 {
             			num++;
             		}
         		}
-        		if(num == 0) {
-        			//System.out.println("no where");
-        			return false;
-        		}
+       			return false;
     		}
     	}
     	return false;
