@@ -1,4 +1,4 @@
-
+package codejam2017_1st;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;

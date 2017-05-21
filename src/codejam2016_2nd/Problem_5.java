@@ -1,3 +1,4 @@
+package codejam2016_2nd;
 
 import java.awt.Point;
 import java.io.BufferedInputStream;
