@@ -1,15 +1,13 @@
+package codejam2017_2nd;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeMap;
 
-public class Problem_3 {
+public class Problem_2_1_done {
 
     static BufferedWriter out;
 	public static void main(String[] args) {
@@ -17,7 +15,6 @@ public class Problem_3 {
             //out = new BufferedWriter(new FileWriter(args[0].substring(0, args[0].lastIndexOf('.')) + ".out"));
 			out = new BufferedWriter(new FileWriter("input.out"));
             start("Set1.in");
-			//start("2.in");
 			//start(args[0]);
 			out.close();
         } catch (Exception e) {
@@ -65,8 +62,6 @@ public class Problem_3 {
 						thin = t;
 						min = x;
 					}
-					//System.out.println(Arrays.toString(first) + Arrays.toString(second));
-					//System.out.println(t + " " + min);
 				}
 				
 			}
