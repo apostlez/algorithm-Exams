@@ -7,20 +7,73 @@ public class Main {
 	static int[] ho = new int[100001];
 	static int[] hc = new int[100001];
 	static int[] d = new int[100001];
+	static ArrayList<Integer> h_order = new ArrayList<Integer>();
+	static ArrayList<Integer> h_origin = new ArrayList<Integer>();
+	static ArrayList<Integer> h_index = new ArrayList<Integer>();
+	
+	static void orderedInsert(int start, int end, int e, int index) {
+		if(start == end) {
+			h_order.add(start, e);
+			h_index.add(start,index);
+			return;
+		}
+		int mid = start + end >> 1;
+		if(h_order.get(mid) == e) {
+			orderedInsert(mid+1, end, e, index);
+		} else if(h_order.get(mid) > e) {
+			orderedInsert(start, mid, e, index);
+		} else {
+			orderedInsert(mid+1, end, e, index);
+		}
+	}
+	
+	static int getDistFromArrayList() {
+		int sum = 0;
+		for (int i = 1; i < n; i++) {
+			//if(h_order.get(i) - h_order.get(i-1) <= 1) continue;
+			int start = Math.min(h_index.get(i), h_index.get(i-1));
+			int end = Math.max(h_index.get(i), h_index.get(i-1));
+			d[i] = end - start - 1;
+			for (int j = start+1; j < end; j++) {
+				if(h_origin.get(j) <= h_order.get(i)) {
+					d[i]--;
+				}
+			}
+			sum += d[i];
+		}
+		return sum;
+	}
+
+	
 	static int n = 0;
 	public static void main(String args[]){
 		Scanner sc = new Scanner(System.in);
 		n = sc.nextInt();
 
 		for (int i=0;i<n;i++) {
-			h[i] = sc.nextInt();
-			ho[i] = h[i];
+			int t = sc.nextInt();
+			h[i] = t;
+			ho[i] = t;
 			hc[i] = i;
+			orderedInsert(0, i, t, i);
+			h_origin.add(t);
 		}
+		int res = getDistFromArrayList();
+		System.out.println(res + n + h_index.get(0));
+/*
+		h_order.forEach((a) -> { System.out.print(a + " ");});
+		System.out.println();
+		h_index.forEach((a) -> { System.out.print(a + " ");});
+		System.out.println();
+*/	
+
+		// bubble sort
 		//sort();
-		sort(0, n-1);
-		
-/*		for(int i=0;i<n;i++) {
+
+		// quick sort
+		//sort(0, n-1);
+/*		
+		for(int i=0;i<n;i++) {
 			System.out.print(h[i] + " ");
 		}
 		System.out.println();
@@ -29,8 +82,8 @@ public class Main {
 		}
 		System.out.println();
 */
-		int res = getD();
-		System.out.println(res + n + hc[0]);
+//		int res = getD();
+//		System.out.println(res + n + hc[0]);
 
 /*		for(int i=0;i<n;i++) {
 			System.out.print(d[i] + " ");
