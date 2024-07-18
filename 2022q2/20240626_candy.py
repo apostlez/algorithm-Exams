@@ -63,3 +63,4 @@ for _ in range(t):
   #print(result)
 
   print(sum((index + 1) * value for index, value in enumerate(result)) % 987654323)
+
